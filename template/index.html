@@ -3125,43 +3125,59 @@
       </div>
     </div>
 
-    <!-- Script Anti-Gambar-Rusak v2 -->
+    <!-- Script Lazy Load Screenshot (Anti Rate-Limit) -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const cards = document.querySelectorAll(".tpl-card");
 
-        cards.forEach((card) => {
-          const img = card.querySelector(".tpl-preview img");
-          if (!img) return;
+        // Gunakan IntersectionObserver: Load gambar HANYA saat di-scroll
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const card = entry.target;
+                const img = card.querySelector(".tpl-preview img");
+                if (!img) return;
 
-          // 1. Ambil URL Demo dari atribut data-demo
-          let demoPath = card.getAttribute("data-demo");
-          if (!demoPath) return;
+                let demoPath = card.getAttribute("data-demo");
+                if (!demoPath) return;
 
-          // 2. Buat URL lengkap
-          let fullDemoUrl = demoPath.startsWith("http")
-            ? demoPath
-            : `https://velojasawebsite.online${demoPath}`;
+                // Buat URL target
+                let fullDemoUrl = demoPath.startsWith("http")
+                  ? demoPath
+                  : `https://velojasawebsite.online${demoPath}`;
 
-          let encodedUrl = encodeURIComponent(fullDemoUrl);
+                // Gunakan Thum.io (Lebih stabil untuk lazy load)
+                let newImgUrl = `https://image.thum.io/get/width/800/crop/600/noanimate/${encodeURIComponent(fullDemoUrl)}`;
 
-          // 3. Gunakan Microlink API (Lebih stabil & cepat dari Thum.io)
-          let newImgUrl = `https://api.microlink.io/?url=${encodedUrl}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=900`;
+                // Efek loading (sedikit pudar), lalu normal saat gambar siap
+                img.style.opacity = "0.5";
+                img.style.transition = "opacity 0.3s";
+                img.setAttribute("src", newImgUrl);
+                card.setAttribute("data-image", newImgUrl);
 
-          // Ganti gambar di HTML dan di Modal
-          img.setAttribute("src", newImgUrl);
-          card.setAttribute("data-image", newImgUrl);
+                img.onload = () => {
+                  img.style.opacity = "1";
+                };
 
-          // 4. Fallback UNIK: Jika API tetap gagal, munculkan kotak dengan NAMA TEMPLATE
-          let tplName = card.getAttribute("data-name") || "Template";
-          // Bikin URL gambar placeholder yang ada nama template-nya
-          let uniqueFallback = `https://placehold.co/800x600/1e293b/ffffff?text=${encodeURIComponent(tplName)}`;
+                // Fallback kalau internet mati / API down total
+                let tplName = card.getAttribute("data-name") || "Template";
+                let uniqueFallback = `https://placehold.co/800x600/1e293b/ffffff?text=${encodeURIComponent(tplName)}`;
+                img.setAttribute(
+                  "onerror",
+                  `this.onerror=null; this.src='${uniqueFallback}';`,
+                );
 
-          img.setAttribute(
-            "onerror",
-            `this.onerror=null; this.src='${uniqueFallback}';`,
-          );
-        });
+                // Berhenti pantau card ini kalau sudah di-load
+                obs.unobserve(card);
+              }
+            });
+          },
+          { rootMargin: "200px" },
+        ); // Load gambar 200px sebelum masuk layar
+
+        // Pasang pantauan ke semua card
+        cards.forEach((card) => observer.observe(card));
       });
     </script>
     <script src="/js/template_main.js"></script>

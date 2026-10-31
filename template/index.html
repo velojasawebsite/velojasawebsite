@@ -142,40 +142,42 @@
         },
       };
     </script>
-    <!-- Script Anti-Gambar-Rusak -->
+
+    <!-- Script Anti-Gambar-Rusak v2 -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const templateImages = document.querySelectorAll(".tpl-preview img");
+        const cards = document.querySelectorAll(".tpl-card");
 
-        templateImages.forEach((img) => {
-          let originalSrc = img.getAttribute("src");
+        cards.forEach((card) => {
+          const img = card.querySelector(".tpl-preview img");
+          if (!img) return;
 
-          // 1. Ubah API Screenshot WordPress (yang sering down) ke Thum.io (lebih stabil)
-          if (
-            originalSrc &&
-            originalSrc.includes("s.wordpress.com/mshots/v1/")
-          ) {
-            // Ambil URL target dari link WP
-            let targetUrl = originalSrc.split("mshots/v1/")[1].split("?")[0];
+          // 1. Ambil URL Demo dari atribut data-demo
+          let demoPath = card.getAttribute("data-demo");
+          if (!demoPath) return;
 
-            // Buat URL gambar baru pakai Thum.io
-            let newSrc = `https://image.thum.io/get/width/800/crop/600/${targetUrl}`;
-            img.setAttribute("src", newSrc);
+          // 2. Buat URL lengkap
+          let fullDemoUrl = demoPath.startsWith("http")
+            ? demoPath
+            : `https://velojasawebsite.online${demoPath}`;
 
-            // Sinkronkan juga dengan atribut data-image di card (kalau nanti dipakai di modal)
-            let parentCard = img.closest(".tpl-card");
-            if (parentCard) {
-              let dataImg = parentCard.getAttribute("data-image");
-              if (dataImg && dataImg.includes("s.wordpress.com/mshots/v1/")) {
-                parentCard.setAttribute("data-image", newSrc);
-              }
-            }
-          }
+          let encodedUrl = encodeURIComponent(fullDemoUrl);
 
-          // 2. Fallback: Jika API tetap error / gagal load, munculkan gambar default
+          // 3. Gunakan Microlink API (Lebih stabil & cepat dari Thum.io)
+          let newImgUrl = `https://api.microlink.io/?url=${encodedUrl}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=900`;
+
+          // Ganti gambar di HTML dan di Modal
+          img.setAttribute("src", newImgUrl);
+          card.setAttribute("data-image", newImgUrl);
+
+          // 4. Fallback UNIK: Jika API tetap gagal, munculkan kotak dengan NAMA TEMPLATE
+          let tplName = card.getAttribute("data-name") || "Template";
+          // Bikin URL gambar placeholder yang ada nama template-nya
+          let uniqueFallback = `https://placehold.co/800x600/1e293b/ffffff?text=${encodeURIComponent(tplName)}`;
+
           img.setAttribute(
             "onerror",
-            "this.onerror=null; this.src='https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=800&q=80'; this.style.opacity='0.8';",
+            `this.onerror=null; this.src='${uniqueFallback}';`,
           );
         });
       });

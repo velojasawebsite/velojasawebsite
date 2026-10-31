@@ -142,6 +142,44 @@
         },
       };
     </script>
+    <!-- Script Anti-Gambar-Rusak -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const templateImages = document.querySelectorAll(".tpl-preview img");
+
+        templateImages.forEach((img) => {
+          let originalSrc = img.getAttribute("src");
+
+          // 1. Ubah API Screenshot WordPress (yang sering down) ke Thum.io (lebih stabil)
+          if (
+            originalSrc &&
+            originalSrc.includes("s.wordpress.com/mshots/v1/")
+          ) {
+            // Ambil URL target dari link WP
+            let targetUrl = originalSrc.split("mshots/v1/")[1].split("?")[0];
+
+            // Buat URL gambar baru pakai Thum.io
+            let newSrc = `https://image.thum.io/get/width/800/crop/600/${targetUrl}`;
+            img.setAttribute("src", newSrc);
+
+            // Sinkronkan juga dengan atribut data-image di card (kalau nanti dipakai di modal)
+            let parentCard = img.closest(".tpl-card");
+            if (parentCard) {
+              let dataImg = parentCard.getAttribute("data-image");
+              if (dataImg && dataImg.includes("s.wordpress.com/mshots/v1/")) {
+                parentCard.setAttribute("data-image", newSrc);
+              }
+            }
+          }
+
+          // 2. Fallback: Jika API tetap error / gagal load, munculkan gambar default
+          img.setAttribute(
+            "onerror",
+            "this.onerror=null; this.src='https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=800&q=80'; this.style.opacity='0.8';",
+          );
+        });
+      });
+    </script>
   </head>
 
   <body

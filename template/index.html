@@ -3124,62 +3124,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Script Lazy Load Screenshot (Anti Rate-Limit) -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const cards = document.querySelectorAll(".tpl-card");
-
-        // Gunakan IntersectionObserver: Load gambar HANYA saat di-scroll
-        const observer = new IntersectionObserver(
-          (entries, obs) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                const card = entry.target;
-                const img = card.querySelector(".tpl-preview img");
-                if (!img) return;
-
-                let demoPath = card.getAttribute("data-demo");
-                if (!demoPath) return;
-
-                // Buat URL target
-                let fullDemoUrl = demoPath.startsWith("http")
-                  ? demoPath
-                  : `https://velojasawebsite.online${demoPath}`;
-
-                // Gunakan Thum.io (Lebih stabil untuk lazy load)
-                let newImgUrl = `https://image.thum.io/get/width/800/crop/600/noanimate/${encodeURIComponent(fullDemoUrl)}`;
-
-                // Efek loading (sedikit pudar), lalu normal saat gambar siap
-                img.style.opacity = "0.5";
-                img.style.transition = "opacity 0.3s";
-                img.setAttribute("src", newImgUrl);
-                card.setAttribute("data-image", newImgUrl);
-
-                img.onload = () => {
-                  img.style.opacity = "1";
-                };
-
-                // Fallback kalau internet mati / API down total
-                let tplName = card.getAttribute("data-name") || "Template";
-                let uniqueFallback = `https://placehold.co/800x600/1e293b/ffffff?text=${encodeURIComponent(tplName)}`;
-                img.setAttribute(
-                  "onerror",
-                  `this.onerror=null; this.src='${uniqueFallback}';`,
-                );
-
-                // Berhenti pantau card ini kalau sudah di-load
-                obs.unobserve(card);
-              }
-            });
-          },
-          { rootMargin: "200px" },
-        ); // Load gambar 200px sebelum masuk layar
-
-        // Pasang pantauan ke semua card
-        cards.forEach((card) => observer.observe(card));
-      });
-    </script>
     <script src="/js/template_main.js"></script>
   </body>
 </html>

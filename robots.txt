@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://velojasawebsite.online/sitemap.xml
+Sitemap: https://www.velojasawebsite.online/sitemap.xml

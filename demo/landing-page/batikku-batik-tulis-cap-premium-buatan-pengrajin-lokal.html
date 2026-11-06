@@ -205,7 +205,7 @@
       }
     </style>
     <link rel="icon" type="image/png" href="/assets/img/logo.png" />
-</head>
+  </head>
 
   <body class="bg-cream-50 text-slate-700 antialiased overflow-x-hidden">
     <!-- ===================== TOP BAR ===================== -->
@@ -2560,9 +2560,100 @@
         });
       });
     </script>
+
+    <!-- iklan -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Cek apakah user sudah menutup banner ini di sesi ini
+        if (sessionStorage.getItem("velo_banner_closed") === "true") return;
+
+        // Bikin elemen div untuk banner
+        const banner = document.createElement("div");
+        banner.id = "velo-smart-banner";
+
+        // Desain Banner (pakai inline CSS biar nggak nabrak CSS template)
+        banner.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    z-index: 999999;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: max-content;
+    max-width: 90vw;
+    animation: slideUp 0.5s ease-out;
+  `;
+
+        // Isi Banner (Teks & Tombol WA)
+        banner.innerHTML = `
+    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+      Suka desain ini? <b>Bikin web kayak gini cuma Rp 899rb!</b>
+    </span>
+    <a href="https://wa.me/6282364967594?text=Halo%20Velo,%20saya%20lihat%20demo%20template%20di%20website%20Anda.%20Saya%20tertarik%20buat%20website." 
+       target="_blank" 
+       style="background: #10b981; color: white; padding: 8px 16px; border-radius: 30px; text-decoration: none; font-weight: 600; white-space: nowrap; transition: 0.2s;">
+      Chat Velo
+    </a>
+    <button id="closeVeloBanner" style="background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; padding: 0 5px;">
+      &times;
+    </button>
+  `;
+
+        // Tambahkan animasi CSS
+        const style = document.createElement("style");
+        style.innerHTML = `
+    @keyframes slideUp {
+      from { opacity: 0; transform: translate(-50%, 20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+    @media (max-width: 600px) {
+      #velo-smart-banner { flex-direction: column; text-align: center; border-radius: 20px; padding: 15px; gap: 10px; }
+    }
+  `;
+        document.head.appendChild(style);
+        document.body.appendChild(banner);
+
+        // Fitur Tutup Banner
+        document
+          .getElementById("closeVeloBanner")
+          .addEventListener("click", function () {
+            banner.style.display = "none";
+            sessionStorage.setItem("velo_banner_closed", "true"); // Biar nggak muncul terus kalau pindah halaman
+          });
+      });
+    </script>
+
     <!-- VELO Footer Watermark -->
-  <footer style="text-align: center; padding: 24px 16px; border-top: 1px solid #e5e7eb; margin-top: 40px; font-family: system-ui, sans-serif; font-size: 13px; color: #6b7280;">
-    Designed by <a href="https://www.velojasawebsite.online" target="_blank" style="font-weight: bold; color: #2563eb; text-decoration: none;">VELO</a>
-  </footer>
-</body>
+    <footer
+      style="
+        text-align: center;
+        padding: 24px 16px;
+        border-top: 1px solid #e5e7eb;
+        margin-top: 40px;
+        font-family: system-ui, sans-serif;
+        font-size: 13px;
+        color: #6b7280;
+      "
+    >
+      Designed by
+      <a
+        href="https://www.velojasawebsite.online"
+        target="_blank"
+        style="font-weight: bold; color: #2563eb; text-decoration: none"
+        >VELO</a
+      >
+    </footer>
+  </body>
 </html>

@@ -2564,74 +2564,122 @@
     <!-- iklan -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Cek apakah user sudah menutup banner ini di sesi ini
-        if (sessionStorage.getItem("velo_banner_closed") === "true") return;
-
-        // Bikin elemen div untuk banner
-        const banner = document.createElement("div");
-        banner.id = "velo-smart-banner";
-
-        // Desain Banner (pakai inline CSS biar nggak nabrak CSS template)
-        banner.style.cssText = `
+        // ==========================================
+        // 1. BIKIN TOP BAR (Banner Nempel di Atas)
+        // ==========================================
+        const topBar = document.createElement("div");
+        topBar.style.cssText = `
     position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
     color: white;
-    padding: 12px 20px;
-    border-radius: 50px;
+    padding: 10px 15px;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 15px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
     z-index: 999999;
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: max-content;
-    max-width: 90vw;
-    animation: slideUp 0.5s ease-out;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
   `;
 
-        // Isi Banner (Teks & Tombol WA)
-        banner.innerHTML = `
-    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-      Suka desain ini? <b>Bikin web kayak gini cuma Rp 899rb!</b>
+        topBar.innerHTML = `
+    <span style="display: flex; align-items: center; gap: 5px;">
+      🔥 <b>Mau website kayak gini?</b> Desain ini bisa dipakai untuk bisnis Anda!
     </span>
-    <a href="https://wa.me/6282364967594?text=Halo%20Velo,%20saya%20lihat%20demo%20template%20di%20website%20Anda.%20Saya%20tertarik%20buat%20website." 
+    <a href="https://wa.me/6282364967594?text=Halo%20Velo,%20saya%20suka%20desain%20template%20ini.%20Bisa%20buatkan%20untuk%20bisnis%20saya?" 
        target="_blank" 
-       style="background: #10b981; color: white; padding: 8px 16px; border-radius: 30px; text-decoration: none; font-weight: 600; white-space: nowrap; transition: 0.2s;">
-      Chat Velo
+       style="background: white; color: #1e3a8a; padding: 6px 15px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 12px; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      Ambil Template Ini
     </a>
-    <button id="closeVeloBanner" style="background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; padding: 0 5px;">
-      &times;
-    </button>
   `;
 
-        // Tambahkan animasi CSS
-        const style = document.createElement("style");
-        style.innerHTML = `
-    @keyframes slideUp {
-      from { opacity: 0; transform: translate(-50%, 20px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
-    }
-    @media (max-width: 600px) {
-      #velo-smart-banner { flex-direction: column; text-align: center; border-radius: 20px; padding: 15px; gap: 10px; }
-    }
-  `;
-        document.head.appendChild(style);
-        document.body.appendChild(banner);
+        // Geser body ke bawah sedikit biar nggak ketutupan Top Bar
+        document.body.style.paddingTop = "40px";
+        document.body.appendChild(topBar);
 
-        // Fitur Tutup Banner
-        document
-          .getElementById("closeVeloBanner")
-          .addEventListener("click", function () {
-            banner.style.display = "none";
-            sessionStorage.setItem("velo_banner_closed", "true"); // Biar nggak muncul terus kalau pindah halaman
-          });
+        // ==========================================
+        // 2. BIKIN POPUP MODAL (Muncul Setelah 6 Detik)
+        // ==========================================
+        setTimeout(() => {
+          // Cek apakah user sudah pernah close popup ini di tab yang sama
+          if (sessionStorage.getItem("velo_popup_closed") === "true") return;
+
+          const overlay = document.createElement("div");
+          overlay.style.cssText = `
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999999;
+      padding: 20px;
+      font-family: 'Inter', sans-serif;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    `;
+
+          const modal = document.createElement("div");
+          modal.style.cssText = `
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    `;
+
+          // Isi Popup
+          modal.innerHTML = `
+      <button id="closeVeloPopup" style="position: absolute; top: 15px; right: 15px; background: #f1f5f9; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; color: #64748b; font-size: 18px; display: flex; align-items: center; justify-content: center;">&times;</button>
+      
+      <div style="font-size: 40px; margin-bottom: 10px;">👋</div>
+      <h2 style="color: #0f172a; font-size: 22px; font-weight: 800; margin: 0 0 10px 0; line-height: 1.2;">Suka Tampilan Web Ini?</h2>
+      <p style="color: #475569; font-size: 14px; line-height: 1.5; margin: 0 0 20px 0;">
+        Template ini bisa langsung dipasang untuk bisnis Anda. Kami ubah warnanya, ganti logo, dan isi kontennya sesuai brand Anda. Selesai dalam 1-3 hari!
+      </p>
+      
+      <a href="https://wa.me/6282364967594?text=Halo%20Velo,%20saya%20mau%20tanya-tanya%20soal%20pembuatan%20website%20seperti%20di%20demo%20ini." 
+         target="_blank" 
+         style="display: block; width: 100%; background: #10b981; color: white; padding: 14px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 15px; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
+        💬 Chat Admin (Gratis Konsultasi)
+      </a>
+      
+      <p style="color: #94a3b8; font-size: 11px; margin-top: 15px;">
+        Atau lihat <a href="https://www.velojasawebsite.online" style="color: #3b82f6; text-decoration: none;">portofolio lengkap kami</a>.
+      </p>
+    `;
+
+          overlay.appendChild(modal);
+          document.body.appendChild(overlay);
+
+          // Animasi Muncul
+          setTimeout(() => {
+            overlay.style.opacity = "1";
+            modal.style.transform = "scale(1)";
+          }, 50);
+
+          // Fungsi Tutup Popup
+          document
+            .getElementById("closeVeloPopup")
+            .addEventListener("click", function () {
+              overlay.style.opacity = "0";
+              modal.style.transform = "scale(0.9)";
+              setTimeout(() => overlay.remove(), 300);
+              sessionStorage.setItem("velo_popup_closed", "true"); // Biar nggak muncul terus pas refresh
+            });
+        }, 6000); // 6000 ms = 6 detik setelah halaman di-load
       });
     </script>
 

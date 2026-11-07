@@ -180,7 +180,18 @@
       }
     </style>
     <link rel="icon" type="image/png" href="/assets/img/logo.png" />
-</head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtm.js?id=GTM-W8H33PZ5"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    </script>
+  </head>
 
   <body class="bg-white text-slate-700 antialiased overflow-x-hidden">
     <!-- ===================== TOP BAR ===================== -->
@@ -1917,8 +1928,7 @@
                 href="https://wa.me/6282364967594"
                 class="flex items-center gap-2 font-bold text-gold-500 hover:text-gold-400 mb-2"
               >
-                <i class="fa-brands fa-whatsapp"></i> 6282364967594 (Admin
-                PPDB)
+                <i class="fa-brands fa-whatsapp"></i> 6282364967594 (Admin PPDB)
               </a>
               <a
                 href="tel:6282364967594"
@@ -2447,8 +2457,24 @@
       counters.forEach((c) => counterObserver.observe(c));
     </script>
     <!-- VELO Footer Watermark -->
-  <footer style="text-align: center; padding: 24px 16px; border-top: 1px solid #e5e7eb; margin-top: 40px; font-family: system-ui, sans-serif; font-size: 13px; color: #6b7280;">
-    Designed by <a href="https://www.velojasawebsite.online" target="_blank" style="font-weight: bold; color: #2563eb; text-decoration: none;">VELO</a>
-  </footer>
-</body>
+    <footer
+      style="
+        text-align: center;
+        padding: 24px 16px;
+        border-top: 1px solid #e5e7eb;
+        margin-top: 40px;
+        font-family: system-ui, sans-serif;
+        font-size: 13px;
+        color: #6b7280;
+      "
+    >
+      Designed by
+      <a
+        href="https://www.velojasawebsite.online"
+        target="_blank"
+        style="font-weight: bold; color: #2563eb; text-decoration: none"
+        >VELO</a
+      >
+    </footer>
+  </body>
 </html>

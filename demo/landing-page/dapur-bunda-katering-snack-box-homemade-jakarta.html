@@ -1816,6 +1816,175 @@
       ></span>
     </a>
 
+    <!-- iklan -->
+    <script>
+      window.addEventListener("load", function () {
+        const topBarHeight = 50; // Tinggi Top Bar
+
+        // ==========================================
+        // 1. BIKIN TOP BAR (Banner Nempel di Atas)
+        // ==========================================
+        const topBar = document.createElement("div");
+        topBar.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: ${topBarHeight}px;
+          background: #0f172a; /* Warna Slate Gelap Elegan */
+          color: white;
+          padding: 0 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 15px;
+          z-index: 999999;
+          font-family: 'Inter', sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        `;
+
+        topBar.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="https://velojasawebsite.online/assets/img/logo.png" alt="Velo Logo" style="width: 24px; height: 24px; border-radius: 4px; object-fit: contain; background: white; padding: 2px;">
+            <span style="display: none; md:inline-block; color: #94a3b8;">Dibuat oleh <b style="color:white;">Velo Jasa Website</b> | Web + Domain mulai <b style="color:#10b981;">Rp 799rb</b></span>
+          </div>
+          <a href="https://wa.me/6282364967594?text=Halo%20Velo,%20saya%20lihat%20penawaran%20di%20website%20demo.%20Bisa%20minta%20detail%20harga?" 
+             target="_blank" 
+             style="background: #3b82f6; color: white; padding: 6px 16px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 12px; transition: 0.2s; display: flex; align-items: center; gap: 6px;">
+            Lihat Penawaran <i class="fa-solid fa-arrow-right" style="font-size: 10px;"></i>
+          </a>
+        `;
+
+        document.body.appendChild(topBar);
+
+        // ==========================================
+        // 2. FIX NAVBAR (Biar nggak ketutupan)
+        // ==========================================
+        // Dorong body ke bawah sejauh tinggi Top Bar
+        document.body.style.paddingTop = topBarHeight + "px";
+
+        // Geser Navbar template (yang pakai sticky top-0) ke bawah Top Bar
+        const templateNav = document.getElementById("navbar"); // ID navbar template Batikku
+        if (templateNav) {
+          templateNav.style.top = topBarHeight + "px";
+        }
+
+        // ==========================================
+        // 3. BIKIN POPUP MODAL (Muncul Setelah 5 Detik)
+        // ==========================================
+        setTimeout(() => {
+          const overlay = document.createElement("div");
+          overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999999;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          `;
+
+          const modal = document.createElement("div");
+          modal.style.cssText = `
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
+          `;
+
+          modal.innerHTML = `
+            <button id="closeVeloPopup" style="position: absolute; top: 15px; right: 15px; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #64748b; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.2s;">&times;</button>
+            
+            <div style="width: 70px; height: 70px; margin: 0 auto 15px auto; background: #f8fafc; border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+              <img src="https://velojasawebsite.online/assets/img/logo.png" alt="Velo Logo" style="width: 50px; height: 50px; object-fit: contain;">
+            </div>
+            
+            <h2 style="color: #0f172a; font-size: 22px; font-weight: 800; margin: 0 0 8px 0; line-height: 1.2;">Suka Desain Web Ini?</h2>
+            <p style="color: #475569; font-size: 13px; line-height: 1.5; margin: 0 0 20px 0;">
+              Website ini dibuat oleh <b>Velo Jasa Website</b>. Kami siap membuatkan website profesional untuk bisnis Anda dengan harga terjangkau.
+            </p>
+
+            <!-- LIST HARGA PAKET -->
+            <div style="background: #f8fafc; border-radius: 12px; padding: 15px; text-align: left; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 600; color: #0f172a;">🚀 Biolink All-In</span>
+                <span style="font-size: 13px; font-weight: 700; color: #3b82f6;">Rp 149.000<span style="font-size: 10px; color: #64748b; font-weight: normal;">/thn</span></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 600; color: #0f172a;">📦 Template Web Bisnis</span>
+                <span style="font-size: 13px; font-weight: 700; color: #3b82f6;">Rp 799.000</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 13px; font-weight: 600; color: #0f172a;">💎 Custom Web Premium</span>
+                <span style="font-size: 13px; font-weight: 700; color: #3b82f6;">Rp 2.500.000+</span>
+              </div>
+            </div>
+            
+            <!-- Tombol WA -->
+            <a href="https://wa.me/6282364967594?text=Halo%20Velo,%20saya%20tertarik%20buat%20website%20seperti%20di%20demo%20ini.%20Bisa%20minta%20detail%20paketnya?" 
+               target="_blank" 
+               style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #25D366; color: white; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 15px; box-shadow: 0 10px 15px -3px rgba(37, 211, 102, 0.3); transition: 0.2s;">
+              <i class="fa-brands fa-whatsapp" style="font-size: 20px;"></i>
+              Konsultasi Gratis via WA
+            </a>
+            
+            <!-- Link ke Website Utama Velo -->
+            <div style="margin-top: 15px;">
+              <a href="https://velojasawebsite.online" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 12px; font-weight: 600; text-decoration: none; transition: 0.2s;">
+                Lihat Portofolio Lengkap Velo <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i>
+              </a>
+            </div>
+          `;
+
+          overlay.appendChild(modal);
+          document.body.appendChild(overlay);
+
+          // Animasi Muncul
+          setTimeout(() => {
+            overlay.style.opacity = "1";
+            modal.style.transform = "scale(1)";
+          }, 50);
+
+          // Fungsi Tutup
+          const closeModal = () => {
+            overlay.style.opacity = "0";
+            modal.style.transform = "scale(0.95)";
+            setTimeout(() => overlay.remove(), 300);
+          };
+
+          document
+            .getElementById("closeVeloPopup")
+            .addEventListener("click", closeModal);
+
+          // Tutup kalau klik di luar kotak
+          overlay.addEventListener("click", function (e) {
+            if (e.target === overlay) {
+              closeModal();
+            }
+          });
+        }, 5000); // 5 detik
+      });
+    </script>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
       AOS.init({ duration: 600, once: true, offset: 60 });
